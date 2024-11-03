@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+service LocationService {
+  rpc AddLocation (LocationRequest) returns (LocationResponse);
+  rpc UpdateLocation (LocationRequest) returns (LocationResponse);
+  rpc GetLocation (LocationIdRequest) returns (LocationResponse);
+}
+
+message LocationRequest {
+  string id = 1;
+  string name = 2;
+  int32 capacity = 3;
+  string productType = 4;
+}
+
+message LocationIdRequest {
+  string id = 1;
+}
+
+message LocationResponse {
+  string id = 1;
+  string message = 2;
+  bool success = 3;
+}
