@@ -33,5 +33,10 @@ public class Program
             .ConfigureWebHostDefaults(webBuilder =>
             {
                 webBuilder.UseStartup<Startup>();
+            })
+            .ConfigureServices((context, services) =>
+            {
+                services.AddDbContext<InventoryContext>(options =>
+                    options.UseNpgsql(context.Configuration.GetConnectionString("PostgresConnection")));
             });
 }
