@@ -1,4 +1,9 @@
-﻿/.idea
+﻿/.vs
+/.idea
+/Backup
+
 /distributed-system/obj
 /distributed-system/bin
 /distributed-system.sln.DotSettings.user
+
+UpgradeLog.htm
