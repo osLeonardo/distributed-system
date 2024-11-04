@@ -22,7 +22,7 @@ public class Startup
 
             endpoints.MapGet("/", async context =>
             {
-                await context.Response.WriteAsync("Servidor gRPC está em execução...");
+                await context.Response.WriteAsync("Servidor gRPC está em execucao");
             });
         });
     }

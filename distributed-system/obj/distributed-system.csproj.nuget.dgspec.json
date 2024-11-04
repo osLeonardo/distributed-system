@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\leona\\RiderProjects\\distributed-system\\distributed-system\\distributed-system.csproj": {}
+    "/home/leonardo.spilere/Documentos/Personal/distributed-system/distributed-system/distributed-system.csproj": {}
   },
   "projects": {
-    "C:\\Users\\leona\\RiderProjects\\distributed-system\\distributed-system\\distributed-system.csproj": {
+    "/home/leonardo.spilere/Documentos/Personal/distributed-system/distributed-system/distributed-system.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\leona\\RiderProjects\\distributed-system\\distributed-system\\distributed-system.csproj",
+        "projectUniqueName": "/home/leonardo.spilere/Documentos/Personal/distributed-system/distributed-system/distributed-system.csproj",
         "projectName": "distributed-system",
-        "projectPath": "C:\\Users\\leona\\RiderProjects\\distributed-system\\distributed-system\\distributed-system.csproj",
-        "packagesPath": "C:\\Users\\leona\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\leona\\RiderProjects\\distributed-system\\distributed-system\\obj\\",
+        "projectPath": "/home/leonardo.spilere/Documentos/Personal/distributed-system/distributed-system/distributed-system.csproj",
+        "packagesPath": "/home/leonardo.spilere/.nuget/packages/",
+        "outputPath": "/home/leonardo.spilere/Documentos/Personal/distributed-system/distributed-system/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\leona\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/home/leonardo.spilere/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -73,7 +73,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.206/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/home/leonardo.spilere/.dotnet/sdk/8.0.401/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
