@@ -7,7 +7,6 @@ public class LocationServiceImpl : LocationService.LocationServiceBase
 {
     public override Task<LocationResponse> AddLocation(LocationRequest request, ServerCallContext context)
     {
-        // Lógica para adicionar localidade
         return Task.FromResult(new LocationResponse
         {
             Id = request.Id,
@@ -18,7 +17,6 @@ public class LocationServiceImpl : LocationService.LocationServiceBase
 
     public override Task<LocationResponse> UpdateLocation(LocationRequest request, ServerCallContext context)
     {
-        // Lógica para atualizar localidade
         return Task.FromResult(new LocationResponse
         {
             Id = request.Id,
@@ -29,7 +27,6 @@ public class LocationServiceImpl : LocationService.LocationServiceBase
 
     public override Task<LocationResponse> GetLocation(LocationIdRequest request, ServerCallContext context)
     {
-        // Lógica para obter localidade
         return Task.FromResult(new LocationResponse
         {
             Id = request.Id,

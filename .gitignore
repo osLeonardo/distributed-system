@@ -1,4 +1,4 @@
 ﻿/.idea
-/distributed-system/bin/Debug
-/distributed-system/obj/Debug
+/distributed-system/obj
+/distributed-system/bin
 /distributed-system.sln.DotSettings.user
