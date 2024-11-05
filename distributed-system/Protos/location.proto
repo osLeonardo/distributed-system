@@ -2,15 +2,23 @@ syntax = "proto3";
 
 service LocationService {
   rpc AddLocation (LocationRequest) returns (LocationResponse);
-  rpc UpdateLocation (LocationRequest) returns (LocationResponse);
+  rpc UpdateLocation (LocationUpdateRequest) returns (LocationResponse);
   rpc GetLocation (LocationIdRequest) returns (LocationResponse);
 }
 
 message LocationRequest {
+  string name = 1;
+  int32 maxCapacity = 2;
+  int32 currentCapacity = 3;
+  bool isMatriz = 4;
+}
+
+message LocationUpdateRequest {
   string id = 1;
   string name = 2;
-  int32 capacity = 3;
-  string productType = 4;
+  int32 maxCapacity = 3;
+  int32 currentCapacity = 4;
+  string isMatriz = 5;
 }
 
 message LocationIdRequest {

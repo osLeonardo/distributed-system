@@ -7,10 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Protobuf Include="Protos\location.proto" GrpcServices="Server" />
-    </ItemGroup>
-
-    <ItemGroup>
+        <PackageReference Include="Google.Protobuf" Version="3.28.3" />
         <PackageReference Include="Grpc.AspNetCore" Version="2.57.0" />
         <PackageReference Include="Grpc.Tools" Version="2.67.0">
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -28,13 +25,17 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Protobuf Include="Protos\location.proto" GrpcServices="Server" />
+    </ItemGroup>
+
+    <ItemGroup>
         <None Update="appsettings.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Migrations\" />
+        <Folder Include="Migrations\" />
     </ItemGroup>
 
 </Project>
