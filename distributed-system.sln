@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "distributed-system", "distributed-system\distributed-system.csproj", "{E4C62147-2D06-4213-A7BC-C41532E29C67}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "location-client", "location-client\location-client.csproj", "{D189A1F2-CA22-470B-BC21-B3034EB9A831}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{E4C62147-2D06-4213-A7BC-C41532E29C67}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4C62147-2D06-4213-A7BC-C41532E29C67}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4C62147-2D06-4213-A7BC-C41532E29C67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D189A1F2-CA22-470B-BC21-B3034EB9A831}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D189A1F2-CA22-470B-BC21-B3034EB9A831}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D189A1F2-CA22-470B-BC21-B3034EB9A831}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D189A1F2-CA22-470B-BC21-B3034EB9A831}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

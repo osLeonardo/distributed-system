@@ -7,4 +7,5 @@ namespace distributed_system.Repositories.Intefaces;
 public interface ILocationRepository
 {
     ActionResult AddLocation(Location location);
+    Location GetLocationByName(string name);
 }

@@ -6,4 +6,8 @@
 /distributed-system/bin
 /distributed-system.sln.DotSettings.user
 
+/location-client/obj
+/location-client/bin
+/location-client.sln.DotSettings.user
+
 UpgradeLog.htm

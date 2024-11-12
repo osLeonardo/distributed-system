@@ -4,7 +4,10 @@ service LocationService {
   rpc AddLocation (LocationRequest) returns (LocationResponse);
   rpc UpdateLocation (LocationUpdateRequest) returns (LocationResponse);
   rpc GetLocation (LocationIdRequest) returns (LocationResponse);
+  rpc LoginLocation (LocationLoginRequest) returns (LocationResponse);
 }
+
+// Requests
 
 message LocationRequest {
   string name = 1;
@@ -24,6 +27,12 @@ message LocationUpdateRequest {
 message LocationIdRequest {
   string id = 1;
 }
+
+message LocationLoginRequest {
+  string name = 1;
+}
+
+// Responses
 
 message LocationResponse {
   string id = 1;

@@ -22,4 +22,9 @@ public class LocationRepository : ILocationRepository
         _context.SaveChangesAsync();
         return new OkResult();
     }
+
+    public Location GetLocationByName(string name)
+    {
+        return _context.Locations.FirstOrDefault(l => l.Name == name);
+    }
 }
