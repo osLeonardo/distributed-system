@@ -20,6 +20,10 @@ public class InventoryContext : DbContext
             .Property(e => e.Id)
             .ValueGeneratedOnAdd();
 
+        modelBuilder.Entity<Product>()
+            .Property(e => e.Id)
+            .ValueGeneratedOnAdd();
+
         modelBuilder.Entity<Location>().HasData(new Location
         {
             Id = 1,
