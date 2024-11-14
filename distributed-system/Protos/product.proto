@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+service ProductService {
+  rpc AddProduct (ProductRequest) returns (ProductResponse);
+  rpc UpdateProduct (ProductUpdateRequest) returns (ProductResponse);
+  rpc GetProduct (ProductIdRequest) returns (ProductResponse);
+}
+
+// Requests
+
+message ProductRequest {
+  string brand = 1;
+  string name = 2;
+  float costUnit = 3;
+  float salePrice = 4;
+}
+
+message ProductUpdateRequest {
+  int32 id = 1;
+  string brand = 2;
+  string name = 3;
+  float costUnit = 4;
+  float salePrice = 5;
+}
+
+message ProductIdRequest {
+  int32 id = 1;
+}
+
+// Responses
+
+message ProductResponse {
+  int32 id = 1;
+  string message = 2;
+  bool success = 3;
+}

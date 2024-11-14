@@ -3,7 +3,7 @@ syntax = "proto3";
 service LocationService {
   rpc AddLocation (LocationRequest) returns (LocationResponse);
   rpc UpdateLocation (LocationUpdateRequest) returns (LocationResponse);
-  rpc GetLocation (LocationIdRequest) returns (LocationResponse);
+  rpc GetLocation (LocationNameRequest) returns (LocationResponse);
   rpc LoginLocation (LocationLoginRequest) returns (LocationResponse);
 }
 
@@ -17,15 +17,15 @@ message LocationRequest {
 }
 
 message LocationUpdateRequest {
-  string id = 1;
+  int32 id = 1;
   string name = 2;
   int32 maxCapacity = 3;
   int32 currentCapacity = 4;
   string isMatriz = 5;
 }
 
-message LocationIdRequest {
-  string id = 1;
+message LocationNameRequest {
+  string name = 1;
 }
 
 message LocationLoginRequest {
@@ -35,7 +35,6 @@ message LocationLoginRequest {
 // Responses
 
 message LocationResponse {
-  string id = 1;
-  string message = 2;
-  bool success = 3;
+  string message = 1;
+  bool success = 2;
 }

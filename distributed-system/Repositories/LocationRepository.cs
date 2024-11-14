@@ -18,8 +18,16 @@ public class LocationRepository : ILocationRepository
 
     public ActionResult AddLocation(Location location)
     {
-        _context.Locations.Add(location);
-        _context.SaveChangesAsync();
+        try
+        {
+            _context.Locations.AddAsync(location);
+            _context.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            return new BadRequestObjectResult(ex.Message);
+        }
+
         return new OkResult();
     }
 

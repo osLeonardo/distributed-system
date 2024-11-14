@@ -2,6 +2,7 @@ using Grpc.Core;
 using distributed_system;
 using distributed_system.Entities;
 using distributed_system.Repositories.Intefaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace distributed_system.Services;
 
@@ -21,35 +22,32 @@ public class LocationServiceImpl : LocationService.LocationServiceBase
 
     public override async Task<LocationResponse> AddLocation(LocationRequest request, ServerCallContext context)
     {
-        try
+        var location = new Location()
         {
-            var location = new Location()
-            {
-                Id = Guid.NewGuid().GetHashCode(),
-                Name = request.Name,
-                MaxCapacity = request.MaxCapacity,
-                CurrentCapacity = request.CurrentCapacity,
-                IsMatriz = request.IsMatriz
-            };
+            Name = request.Name,
+            MaxCapacity = request.MaxCapacity,
+            CurrentCapacity = request.CurrentCapacity,
+            IsMatriz = request.IsMatriz
+        };
 
-            var response = _locationRepository.AddLocation(location);
+        var response = _locationRepository.AddLocation(location);
 
-            var message = location.IsMatriz ?
+        var message = "Erro ao adicionar localização.";
+        var success = false;
+
+        if (response is OkResult)
+        {
+            success = true;
+            message = location.IsMatriz ?
                 "Matriz adicionada com sucesso." :
                 "Filial adicionada com sucesso.";
+        }
 
-            return new LocationResponse
-            {
-                Id = location.Id.ToString(),
-                Message = message,
-                Success = true
-            };
-        }
-        catch (Exception ex)
+        return new LocationResponse
         {
-            _logger.LogError(ex, "Error in AddLocation");
-            throw new RpcException(new Status(StatusCode.Unknown, "Exception was thrown by handler."), ex.Message);
-        }
+            Message = message,
+            Success = true
+        };
     }
 
     public override async Task<LocationResponse> UpdateLocation(LocationUpdateRequest request, ServerCallContext context)
@@ -58,7 +56,6 @@ public class LocationServiceImpl : LocationService.LocationServiceBase
         {
             return new LocationResponse
             {
-                Id = request.Id,
                 Message = "Localidade atualizada com sucesso.",
                 Success = true
             };
@@ -70,13 +67,12 @@ public class LocationServiceImpl : LocationService.LocationServiceBase
         }
     }
 
-    public override async Task<LocationResponse> GetLocation(LocationIdRequest request, ServerCallContext context)
+    public override async Task<LocationResponse> GetLocation(LocationNameRequest request, ServerCallContext context)
     {
         try
         {
             return new LocationResponse
             {
-                Id = request.Id,
                 Message = "Informações da localidade obtidas.",
                 Success = true
             };
@@ -104,7 +100,6 @@ public class LocationServiceImpl : LocationService.LocationServiceBase
 
             return new LocationResponse
             {
-                Id = location.Id.ToString(),
                 Message = "Login successful.",
                 Success = true
             };
