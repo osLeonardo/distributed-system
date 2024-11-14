@@ -10,22 +10,44 @@ namespace distributed_system.Repositories;
 public class LocationRepository : ILocationRepository
 {
     private readonly InventoryContext _context;
+    private readonly ILogger<LocationRepository> _logger;
 
-    public LocationRepository(InventoryContext context)
+    public LocationRepository(
+        InventoryContext context,
+        ILogger<LocationRepository> logger
+    )
     {
         _context = context;
+        _logger = logger;
     }
 
     public ActionResult AddLocation(Location location)
     {
         try
         {
-            _context.Locations.AddAsync(location);
-            _context.SaveChangesAsync();
+            _context.Locations.Add(location);
+            _context.SaveChanges();
         }
         catch (Exception ex)
         {
-            return new BadRequestObjectResult(ex.Message);
+            _logger.LogError(ex.Message);
+            return new BadRequestResult();
+        }
+
+        return new OkResult();
+    }
+
+    public ActionResult UpdateLocation(Location location)
+    {
+        try
+        {
+            _context.Locations.Update(location);
+            _context.SaveChanges();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex.Message);
+            return new BadRequestResult();
         }
 
         return new OkResult();
@@ -33,6 +55,45 @@ public class LocationRepository : ILocationRepository
 
     public Location GetLocationByName(string name)
     {
-        return _context.Locations.FirstOrDefault(l => l.Name == name);
+        Location location = new();
+
+        try
+        {
+            location = _context.Locations.FirstOrDefault(l =>
+                l.Name == name
+            );
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Erro ao buscar localização: " + ex.Message);
+        }
+
+        return location;
+    }
+
+    public ActionResult DeleteLocation(int id, string name)
+    {
+        try
+        {
+            var location = _context.Locations.FirstOrDefault(l =>
+                l.Id == id &&
+                l.Name == name
+            );
+
+            if (location == null)
+            {
+                return new NotFoundResult();
+            }
+
+            _context.Locations.Remove(location);
+            _context.SaveChanges();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex.Message);
+            return new BadRequestResult();
+        }
+
+        return new OkResult();
     }
 }

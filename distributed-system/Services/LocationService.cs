@@ -9,20 +9,15 @@ namespace distributed_system.Services;
 public class LocationServiceImpl : LocationService.LocationServiceBase
 {
     private readonly ILocationRepository _locationRepository;
-    private readonly ILogger<LocationServiceImpl> _logger;
 
-    public LocationServiceImpl(
-        ILocationRepository locationRepository,
-        ILogger<LocationServiceImpl> logger
-    )
+    public LocationServiceImpl(ILocationRepository locationRepository)
     {
         _locationRepository = locationRepository;
-        _logger = logger;
     }
 
     public override async Task<LocationResponse> AddLocation(LocationRequest request, ServerCallContext context)
     {
-        var location = new Location()
+        Location location = new()
         {
             Name = request.Name,
             MaxCapacity = request.MaxCapacity,
@@ -52,36 +47,65 @@ public class LocationServiceImpl : LocationService.LocationServiceBase
 
     public override async Task<LocationResponse> UpdateLocation(LocationUpdateRequest request, ServerCallContext context)
     {
-        try
+        Location location = new()
         {
-            return new LocationResponse
-            {
-                Message = "Localidade atualizada com sucesso.",
-                Success = true
-            };
-        }
-        catch (Exception ex)
+            Id = request.Id,
+            Name = request.Name,
+            MaxCapacity = request.MaxCapacity,
+            CurrentCapacity = request.CurrentCapacity,
+            IsMatriz = request.IsMatriz
+        };
+
+        var response = _locationRepository.UpdateLocation(location);
+
+        var message = "Erro ao atualizar localização.";
+        var success = false;
+
+        if (response is OkResult)
         {
-            _logger.LogError(ex, "Error in UpdateLocation");
-            throw new RpcException(new Status(StatusCode.Unknown, "Exception was thrown by handler."), ex.Message);
+            success = true;
+            message = "Localização atualizada com sucesso.";
         }
+
+        return new LocationResponse
+        {
+            Message = message,
+            Success = true
+        };
     }
 
-    public override async Task<LocationResponse> GetLocation(LocationNameRequest request, ServerCallContext context)
+    public override async Task<LocationGetResponse> GetLocation(LocationNameRequest request, ServerCallContext context)
     {
-        try
+        var location = _locationRepository.GetLocationByName(request.Name);
+
+        return new LocationGetResponse
         {
-            return new LocationResponse
-            {
-                Message = "Informações da localidade obtidas.",
-                Success = true
-            };
-        }
-        catch (Exception ex)
+            Id = location.Id,
+            Name = location.Name,
+            MaxCapacity = location.MaxCapacity,
+            CurrentCapacity = location.CurrentCapacity,
+            IsMatriz = location.IsMatriz
+        };
+    }
+
+    public override async Task<LocationResponse> DeleteLocation(LocationDeleteRequest request, ServerCallContext context)
+    {
+        var response = _locationRepository.DeleteLocation(request.Id, request.Name);
+
+        var message = "Erro ao deletar localização.";
+        var success = false;
+
+        if (response is OkResult)
         {
-            _logger.LogError(ex, "Error in GetLocation");
-            throw new RpcException(new Status(StatusCode.Unknown, "Exception was thrown by handler."), ex.Message);
+            success = true;
+            message = "Localização deletada com sucesso.";
         }
+
+        return new LocationResponse
+        {
+            Message = message,
+            Success = true
+        };
     }
 
     public override async Task<LocationResponse> LoginLocation(LocationLoginRequest request, ServerCallContext context)
@@ -106,7 +130,6 @@ public class LocationServiceImpl : LocationService.LocationServiceBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error in LoginLocation");
             throw new RpcException(new Status(StatusCode.Unknown, "Exception was thrown by handler."), ex.Message);
         }
     }
