@@ -9,4 +9,6 @@ public class Location
     public int MaxCapacity { get; set; }
     public int CurrentCapacity { get; set; }
     public bool IsMatriz { get; set; }
+    public string Username { get; set; }
+    public string Password { get; set; }
 }

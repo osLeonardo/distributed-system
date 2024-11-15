@@ -1,34 +1,140 @@
+using distributed_system.Entities;
 using distributed_system.Repositories.Intefaces;
 using Grpc.Core;
+using Microsoft.AspNetCore.Mvc;
 
 namespace distributed_system.Services;
 
 public class ProductServiceImpl : ProductService.ProductServiceBase
 {
     private readonly IProductRepository _productRepository;
-    private readonly ILogger<LocationServiceImpl> _logger;
+    private readonly ILogger<ProductServiceImpl> _logger;
 
     public ProductServiceImpl(
         IProductRepository productRepository,
-        ILogger<LocationServiceImpl> logger
-    )
+        ILogger<ProductServiceImpl> logger)
     {
         _productRepository = productRepository;
         _logger = logger;
     }
 
-    public override Task<ProductResponse> AddProduct(ProductRequest request, ServerCallContext context)
+    public override async Task<ProductResponse> AddProduct(ProductRequest request, ServerCallContext context)
     {
-        throw new NotImplementedException();
+        try
+        {
+            Product product = new()
+            {
+                Brand = request.Brand,
+                Name = request.Name,
+                CostUnit = request.CostUnit,
+                SalePrice = request.SalePrice
+            };
+
+            var response = _productRepository.AddProduct(product);
+
+            var message = "Erro ao adicionar produto.";
+            var success = false;
+
+            if (response is OkResult)
+            {
+                message = "Produto adicionado com sucesso.";
+                success = true;
+            }
+
+            return new ProductResponse
+            {
+                Message = message,
+                Success = true
+            };
+        }
+        catch (Exception ex)
+        {
+            throw new RpcException(new Status(StatusCode.Unknown, "Exception was thrown by handler."), ex.Message);
+        }
     }
 
-    public override Task<ProductResponse> GetProduct(ProductIdRequest request, ServerCallContext context)
+    public override async Task<ProductResponse> UpdateProduct(ProductUpdateRequest request, ServerCallContext context)
     {
-        throw new NotImplementedException();
+        try
+        {
+            Product product = new()
+            {
+                Id = request.Id,
+                Brand = request.Brand,
+                Name = request.Name,
+                CostUnit = request.CostUnit,
+                SalePrice = request.SalePrice
+            };
+
+            var response = _productRepository.UpdateProduct(product);
+
+            var message = "Erro ao atualizar produto.";
+            var success = false;
+
+            if (response is OkResult)
+            {
+                success = true;
+                message = "Produto atualizad com sucesso.";
+            }
+
+            return new ProductResponse
+            {
+                Message = message,
+                Success = true
+            };
+        }
+        catch (Exception ex)
+        {
+            throw new RpcException(new Status(StatusCode.Unknown, "Exception was thrown by handler."), ex.Message);
+        }
     }
 
-    public override Task<ProductResponse> UpdateProduct(ProductUpdateRequest request, ServerCallContext context)
+    public override async Task<ProductGetResponse> GetProduct(ProductNameRequest request, ServerCallContext context)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var product = _productRepository.GetProductByName(request.Name);
+
+            return new ProductGetResponse
+            {
+                Id = product.Id,
+                Brand = product.Brand,
+                Name = product.Name,
+                CostUnit = product.CostUnit,
+                SalePrice = product.SalePrice
+            };
+        }
+        catch (Exception ex)
+        {
+            throw new RpcException(new Status(StatusCode.Unknown, "Exception was thrown by handler."), ex.Message);
+        }
     }
+
+    public override async Task<ProductResponse> DeleteProduct(ProductDeleteRequest request, ServerCallContext context)
+    {
+        try
+        {
+            var response = _productRepository.DeleteProduct(request.Id, request.Name);
+
+            var message = "Erro ao deletar produto.";
+            var success = false;
+
+            if (response is OkResult)
+            {
+                success = true;
+                message = "Produto deletado com sucesso.";
+            }
+
+            return new ProductResponse
+            {
+                Message = message,
+                Success = true
+            };
+        }
+        catch (Exception ex)
+        {
+            throw new RpcException(new Status(StatusCode.Unknown, "Exception was thrown by handler."), ex.Message);
+        }
+    }
+
 }

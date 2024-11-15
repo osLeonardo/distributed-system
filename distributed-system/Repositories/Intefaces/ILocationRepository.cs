@@ -9,5 +9,6 @@ public interface ILocationRepository
     ActionResult AddLocation(Location location);
     ActionResult UpdateLocation(Location location);
     Location GetLocationByName(string name);
+    Location GetLocationByUsernameAndPassword(string username, string password);
     ActionResult DeleteLocation(int id, string name);
 }

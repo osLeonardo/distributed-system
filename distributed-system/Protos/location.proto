@@ -15,6 +15,8 @@ message LocationRequest {
   int32 maxCapacity = 2;
   int32 currentCapacity = 3;
   bool isMatriz = 4;
+  string username = 5;
+  string password = 6;
 }
 
 message LocationUpdateRequest {
@@ -23,6 +25,8 @@ message LocationUpdateRequest {
   int32 maxCapacity = 3;
   int32 currentCapacity = 4;
   bool isMatriz = 5;
+  string username = 6;
+  string password = 7;
 }
 
 message LocationNameRequest {
@@ -35,7 +39,8 @@ message LocationDeleteRequest {
 }
 
 message LocationLoginRequest {
-  string name = 1;
+  string username = 1;
+  string password = 2;
 }
 
 // Responses

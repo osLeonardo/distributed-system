@@ -71,6 +71,18 @@ public class LocationRepository : ILocationRepository
         return location;
     }
 
+    public Location GetLocationByUsernameAndPassword(string username, string password)
+    {
+        try
+        {
+            return _context.Locations.FirstOrDefault(l => l.Username == username && l.Password == password);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Error fetching location: " + ex.Message);
+        }
+    }
+
     public ActionResult DeleteLocation(int id, string name)
     {
         try
