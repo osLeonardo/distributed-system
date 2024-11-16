@@ -188,23 +188,25 @@ public class LocationServiceImpl : LocationService.LocationServiceBase
         }
     }
 
-    public override async Task<LocationResponse> LoginLocation(LocationLoginRequest request, ServerCallContext context)
+    public override async Task<LocationLoginResponse> LoginLocation(LocationLoginRequest request, ServerCallContext context)
     {
         try
         {
             var location = _locationRepository.GetLocationByUsernameAndPassword(request.Username, request.Password);
             if (location == null)
             {
-                return new LocationResponse
+                return new LocationLoginResponse
                 {
+                    LocationName = String.Empty,
                     Message = "Usuário ou senha inválidos.",
                     Success = false
                 };
             }
 
-            return new LocationResponse
+            return new LocationLoginResponse
             {
-                Message = "Login efetuado com sucesso.",
+                LocationName = location.Name,
+                Message = "Login efetuado a com sucesso.",
                 Success = true
             };
         }

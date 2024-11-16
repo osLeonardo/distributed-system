@@ -1,0 +1,3 @@
+obj/Debug/net8.0/ProductLocation.cs \
+obj/Debug/net8.0/ProductLocationGrpc.cs: /home/leonardo.spilere/.nuget/packages/grpc.tools/2.67.0/build/native/include/google/protobuf/empty.proto\
+ ../distributed-system/Protos/product_location.proto

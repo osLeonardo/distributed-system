@@ -9,7 +9,7 @@ service LocationService {
   rpc GetLocationById (LocationIdRequest) returns (LocationGetResponse);
   rpc GetAllLocations (google.protobuf.Empty) returns (LocationGetResponseList);
   rpc DeleteLocation (LocationDeleteRequest) returns (LocationResponse);
-  rpc LoginLocation (LocationLoginRequest) returns (LocationResponse);
+  rpc LoginLocation (LocationLoginRequest) returns (LocationLoginResponse);
 }
 
 // Requests
@@ -56,6 +56,12 @@ message LocationLoginRequest {
 message LocationResponse {
   string message = 1;
   bool success = 2;
+}
+
+message LocationLoginResponse {
+  string locationName = 1;
+  string message = 2;
+  bool success = 3;
 }
 
 message LocationGetResponse {
