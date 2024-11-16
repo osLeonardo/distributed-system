@@ -71,6 +71,40 @@ public class LocationRepository : ILocationRepository
         return location;
     }
 
+    public Location GetLocationById(int id)
+    {
+        Location location = new();
+
+        try
+        {
+            location = _context.Locations.FirstOrDefault(l =>
+                l.Id == id
+            );
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Erro ao buscar localização: " + ex.Message);
+        }
+
+        return location;
+    }
+
+    public List<Location> GetAllLocations()
+    {
+        List<Location> locations = new();
+
+        try
+        {
+            locations = _context.Locations.ToList();
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Erro ao buscar localização: " + ex.Message);
+        }
+
+        return locations;
+    }
+
     public Location GetLocationByUsernameAndPassword(string username, string password)
     {
         try

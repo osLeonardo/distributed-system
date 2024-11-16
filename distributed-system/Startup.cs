@@ -14,6 +14,7 @@ public class Startup
             options.UseNpgsql("Host=localhost;Port=5432;Database=distributed-system;Username=postgres;Password=postgres"));
         services.AddScoped<ILocationRepository, LocationRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<IProductLocationRepository, ProductLocationRepository>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -29,6 +30,7 @@ public class Startup
         {
             endpoints.MapGrpcService<LocationServiceImpl>().EnableGrpcWeb();
             endpoints.MapGrpcService<ProductServiceImpl>().EnableGrpcWeb();
+            endpoints.MapGrpcService<ProductLocationServiceImpl>().EnableGrpcWeb();
 
             endpoints.MapGet("/", async context =>
             {

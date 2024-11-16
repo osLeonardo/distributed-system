@@ -1,9 +1,13 @@
 syntax = "proto3";
 
+import "google/protobuf/empty.proto";
+
 service LocationService {
   rpc AddLocation (LocationRequest) returns (LocationResponse);
   rpc UpdateLocation (LocationUpdateRequest) returns (LocationResponse);
-  rpc GetLocation (LocationNameRequest) returns (LocationGetResponse);
+  rpc GetLocationByName (LocationNameRequest) returns (LocationGetResponse);
+  rpc GetLocationById (LocationIdRequest) returns (LocationGetResponse);
+  rpc GetAllLocations (google.protobuf.Empty) returns (LocationGetResponseList);
   rpc DeleteLocation (LocationDeleteRequest) returns (LocationResponse);
   rpc LoginLocation (LocationLoginRequest) returns (LocationResponse);
 }
@@ -33,6 +37,10 @@ message LocationNameRequest {
   string name = 1;
 }
 
+message LocationIdRequest {
+  int32 id = 1;
+}
+
 message LocationDeleteRequest {
   int32 id = 1;
   string name = 2;
@@ -56,4 +64,8 @@ message LocationGetResponse {
   int32 maxCapacity = 3;
   int32 currentCapacity = 4;
   bool isMatriz = 5;
+}
+
+message LocationGetResponseList {
+  repeated LocationGetResponse locations = 1;
 }

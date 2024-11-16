@@ -2,6 +2,7 @@ using Grpc.Core;
 using distributed_system;
 using distributed_system.Entities;
 using distributed_system.Repositories.Intefaces;
+using Google.Protobuf.WellKnownTypes;
 using Microsoft.AspNetCore.Mvc;
 
 namespace distributed_system.Services;
@@ -90,7 +91,7 @@ public class LocationServiceImpl : LocationService.LocationServiceBase
         }
     }
 
-    public override async Task<LocationGetResponse> GetLocation(LocationNameRequest request, ServerCallContext context)
+    public override async Task<LocationGetResponse> GetLocationByName(LocationNameRequest request, ServerCallContext context)
     {
         try
         {
@@ -104,6 +105,55 @@ public class LocationServiceImpl : LocationService.LocationServiceBase
                 CurrentCapacity = location.CurrentCapacity,
                 IsMatriz = location.IsMatriz
             };
+        }
+        catch (Exception ex)
+        {
+            throw new RpcException(new Status(StatusCode.Unknown, "Exception was thrown by handler."), ex.Message);
+        }
+    }
+
+    public override async Task<LocationGetResponse> GetLocationById(LocationIdRequest request, ServerCallContext context)
+    {
+        try
+        {
+            var location = _locationRepository.GetLocationById(request.Id);
+
+            return new LocationGetResponse
+            {
+                Id = location.Id,
+                Name = location.Name,
+                MaxCapacity = location.MaxCapacity,
+                CurrentCapacity = location.CurrentCapacity,
+                IsMatriz = location.IsMatriz
+            };
+        }
+        catch (Exception ex)
+        {
+            throw new RpcException(new Status(StatusCode.Unknown, "Exception was thrown by handler."), ex.Message);
+        }
+    }
+
+    public override async Task<LocationGetResponseList> GetAllLocations(Empty request, ServerCallContext context)
+    {
+        try
+        {
+            var locations = _locationRepository.GetAllLocations();
+
+            var response = new LocationGetResponseList();
+
+            foreach (var location in locations)
+            {
+                response.Locations.Add(new LocationGetResponse
+                {
+                    Id = location.Id,
+                    Name = location.Name,
+                    MaxCapacity = location.MaxCapacity,
+                    CurrentCapacity = location.CurrentCapacity,
+                    IsMatriz = location.IsMatriz
+                });
+            }
+
+            return response;
         }
         catch (Exception ex)
         {

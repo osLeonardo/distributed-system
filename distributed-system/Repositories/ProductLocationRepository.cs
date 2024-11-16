@@ -5,25 +5,25 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace distributed_system.Repositories;
 
-public class ProductRepository : IProductRepository
+public class ProductLocationRepository : IProductLocationRepository
 {
     private readonly InventoryContext _context;
-    private readonly ILogger<ProductRepository> _logger;
+    private readonly ILogger<ProductLocationRepository> _logger;
 
-    public ProductRepository(
+    public ProductLocationRepository(
         InventoryContext context,
-        ILogger<ProductRepository> logger
+        ILogger<ProductLocationRepository> logger
     )
     {
         _context = context;
         _logger = logger;
     }
 
-    public ActionResult AddProduct(Product product)
+    public ActionResult AddProductLocation(ProductLocation productLocation)
     {
         try
         {
-            _context.Products.Add(product);
+            _context.LocationProducts.Add(productLocation);
             _context.SaveChanges();
         }
         catch (Exception ex)
@@ -35,11 +35,11 @@ public class ProductRepository : IProductRepository
         return new OkResult();
     }
 
-    public ActionResult UpdateProduct(Product product)
+    public ActionResult UpdateProductLocation(ProductLocation productLocation)
     {
         try
         {
-            _context.Products.Update(product);
+            _context.LocationProducts.Update(productLocation);
             _context.SaveChanges();
         }
         catch (Exception ex)
@@ -51,31 +51,13 @@ public class ProductRepository : IProductRepository
         return new OkResult();
     }
 
-    public Product GetProductByName(string name)
+    public ProductLocation GetProductLocationById(int id)
     {
-        Product product = new();
+        ProductLocation productLocation = new();
 
         try
         {
-            product = _context.Products.FirstOrDefault(l =>
-                l.Name == name
-            );
-        }
-        catch (Exception ex)
-        {
-            throw new Exception("Erro ao buscar localização: " + ex.Message);
-        }
-
-        return product;
-    }
-
-    public Product GetProductById(int id)
-    {
-        Product product = new();
-
-        try
-        {
-            product = _context.Products.FirstOrDefault(l =>
+            productLocation = _context.LocationProducts.FirstOrDefault(l =>
                 l.Id == id
             );
         }
@@ -84,40 +66,39 @@ public class ProductRepository : IProductRepository
             throw new Exception("Erro ao buscar localização: " + ex.Message);
         }
 
-        return product;
+        return productLocation;
     }
 
-    public List<Product> GetAllProducts()
+    public List<ProductLocation> GetAllProductLocations()
     {
-        List<Product> products = new();
+        List<ProductLocation> productLocations = new();
 
         try
         {
-            products = _context.Products.ToList();
+            productLocations = _context.LocationProducts.ToList();
         }
         catch (Exception ex)
         {
             throw new Exception("Erro ao buscar localização: " + ex.Message);
         }
 
-        return products;
+        return productLocations;
     }
 
-    public ActionResult DeleteProduct(int id, string name)
+    public ActionResult DeleteProductLocation(int id)
     {
         try
         {
-            var product = _context.Products.FirstOrDefault(l =>
-                l.Id == id &&
-                l.Name == name
+            var productLocation = _context.LocationProducts.FirstOrDefault(l =>
+                l.Id == id
             );
 
-            if (product == null)
+            if (productLocation == null)
             {
                 return new NotFoundResult();
             }
 
-            _context.Products.Remove(product);
+            _context.LocationProducts.Remove(productLocation);
             _context.SaveChanges();
         }
         catch (Exception ex)

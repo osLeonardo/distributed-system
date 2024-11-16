@@ -1,9 +1,13 @@
 syntax = "proto3";
 
+import "google/protobuf/empty.proto";
+
 service ProductService {
   rpc AddProduct (ProductRequest) returns (ProductResponse);
   rpc UpdateProduct (ProductUpdateRequest) returns (ProductResponse);
-  rpc GetProduct (ProductNameRequest) returns (ProductGetResponse);
+  rpc GetProductByName (ProductNameRequest) returns (ProductGetResponse);
+  rpc GetProductById (ProductIdRequest) returns (ProductGetResponse);
+  rpc GetAllProducts (google.protobuf.Empty) returns (ProductGetResponseList);
   rpc DeleteProduct (ProductDeleteRequest) returns (ProductResponse);
 }
 
@@ -28,6 +32,10 @@ message ProductNameRequest {
   string name = 1;
 }
 
+message ProductIdRequest {
+  int32 id = 1;
+}
+
 message ProductDeleteRequest {
   int32 id = 1;
   string name = 2;
@@ -46,4 +54,8 @@ message ProductGetResponse {
   string name = 3;
   float costUnit = 4;
   float salePrice = 5;
+}
+
+message ProductGetResponseList {
+  repeated ProductGetResponse products = 1;
 }

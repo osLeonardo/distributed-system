@@ -25,6 +25,7 @@
     <ItemGroup>
         <Protobuf Include="..\distributed-system\Protos\location.proto" GrpcServices="Client" />
         <Protobuf Include="..\distributed-system\Protos\product.proto" GrpcServices="Client" />
+        <Protobuf Include="..\distributed-system\Protos\product_location.proto" GrpcServices="Client" />
     </ItemGroup>
     
 </Project>

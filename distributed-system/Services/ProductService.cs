@@ -1,5 +1,6 @@
 using distributed_system.Entities;
 using distributed_system.Repositories.Intefaces;
+using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Microsoft.AspNetCore.Mvc;
 
@@ -74,7 +75,7 @@ public class ProductServiceImpl : ProductService.ProductServiceBase
             if (response is OkResult)
             {
                 success = true;
-                message = "Produto atualizad com sucesso.";
+                message = "Produto atualizado com sucesso.";
             }
 
             return new ProductResponse
@@ -89,7 +90,7 @@ public class ProductServiceImpl : ProductService.ProductServiceBase
         }
     }
 
-    public override async Task<ProductGetResponse> GetProduct(ProductNameRequest request, ServerCallContext context)
+    public override async Task<ProductGetResponse> GetProductByName(ProductNameRequest request, ServerCallContext context)
     {
         try
         {
@@ -103,6 +104,55 @@ public class ProductServiceImpl : ProductService.ProductServiceBase
                 CostUnit = product.CostUnit,
                 SalePrice = product.SalePrice
             };
+        }
+        catch (Exception ex)
+        {
+            throw new RpcException(new Status(StatusCode.Unknown, "Exception was thrown by handler."), ex.Message);
+        }
+    }
+
+    public override async Task<ProductGetResponse> GetProductById(ProductIdRequest request, ServerCallContext context)
+    {
+        try
+        {
+            var product = _productRepository.GetProductById(request.Id);
+
+            return new ProductGetResponse
+            {
+                Id = product.Id,
+                Brand = product.Brand,
+                Name = product.Name,
+                CostUnit = product.CostUnit,
+                SalePrice = product.SalePrice
+            };
+        }
+        catch (Exception ex)
+        {
+            throw new RpcException(new Status(StatusCode.Unknown, "Exception was thrown by handler."), ex.Message);
+        }
+    }
+
+    public override async Task<ProductGetResponseList> GetAllProducts(Empty request, ServerCallContext context)
+    {
+        try
+        {
+            var products = _productRepository.GetAllProducts();
+
+            var response = new ProductGetResponseList();
+
+            foreach (var product in products)
+            {
+                response.Products.Add(new ProductGetResponse
+                {
+                    Id = product.Id,
+                    Brand = product.Brand,
+                    Name = product.Name,
+                    CostUnit = product.CostUnit,
+                    SalePrice = product.SalePrice
+                });
+            }
+
+            return response;
         }
         catch (Exception ex)
         {
@@ -136,5 +186,4 @@ public class ProductServiceImpl : ProductService.ProductServiceBase
             throw new RpcException(new Status(StatusCode.Unknown, "Exception was thrown by handler."), ex.Message);
         }
     }
-
 }
