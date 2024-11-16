@@ -27,8 +27,9 @@ public class ProductLocationServiceImpl : ProductLocationService.ProductLocation
     {
         try
         {
-            var location = _locationRepository.GetLocationById(request.LocationId);
             var product = _productRepository.GetProductById(request.ProductId);
+            var location = _locationRepository.GetLocationById(request.LocationId);
+            location.CurrentCapacity -= request.Quantity;
 
             ProductLocation productLocation = new()
             {
@@ -39,12 +40,13 @@ public class ProductLocationServiceImpl : ProductLocationService.ProductLocation
                 Amount = request.Quantity
             };
 
-            var response = _productLocationRepository.AddProductLocation(productLocation);
+            var locationResponse = _locationRepository.UpdateLocation(location);
+            var productLocationResponse = _productLocationRepository.AddProductLocation(productLocation);
 
             var message = "Erro ao associar produto a localização.";
             var success = false;
 
-            if (response is OkResult)
+            if (productLocationResponse is OkResult && locationResponse is OkResult)
             {
                 message = "Produto associar a localização com sucesso.";
                 success = true;
@@ -53,7 +55,7 @@ public class ProductLocationServiceImpl : ProductLocationService.ProductLocation
             return new ProductLocationResponse
             {
                 Message = message,
-                Success = true
+                Success = success
             };
         }
         catch (Exception ex)
@@ -66,10 +68,20 @@ public class ProductLocationServiceImpl : ProductLocationService.ProductLocation
     {
         try
         {
+            var productLocation = _productLocationRepository.GetProductLocationById(request.Id);
             var product = _productRepository.GetProductById(request.ProductId);
             var location = _locationRepository.GetLocationById(request.LocationId);
 
-            ProductLocation productLocation = new()
+            if (productLocation.Amount > request.Quantity)
+            {
+                location.CurrentCapacity += productLocation.Amount - request.Quantity;
+            }
+            else
+            {
+                location.CurrentCapacity -= request.Quantity - productLocation.Amount;
+            }
+
+            productLocation = new ProductLocation
             {
                 Id = request.Id,
                 LocationId = request.LocationId,
@@ -79,12 +91,13 @@ public class ProductLocationServiceImpl : ProductLocationService.ProductLocation
                 Amount = request.Quantity
             };
 
-            var response = _productLocationRepository.UpdateProductLocation(productLocation);
+            var productLocationResponse = _productLocationRepository.UpdateProductLocation(productLocation);
+            var locationResponse = _locationRepository.UpdateLocation(location);
 
             var message = "Erro ao atualizar associação de produto a localização.";
             var success = false;
 
-            if (response is OkResult)
+            if (productLocationResponse is OkResult && locationResponse is OkResult)
             {
                 success = true;
                 message = "Associação de produto a localização atualizada com sucesso.";
@@ -93,7 +106,7 @@ public class ProductLocationServiceImpl : ProductLocationService.ProductLocation
             return new ProductLocationResponse
             {
                 Message = message,
-                Success = true
+                Success = success
             };
         }
         catch (Exception ex)
@@ -108,8 +121,6 @@ public class ProductLocationServiceImpl : ProductLocationService.ProductLocation
         {
             var productLocation = _productLocationRepository.GetProductLocationById(request.Id);
             var location = _locationRepository.GetLocationById(productLocation.LocationId);
-            var product = _productRepository.GetProductById(productLocation.ProductId);
-
             var locationResponse = new LocationData
             {
                 Id = location.Id,
@@ -118,7 +129,7 @@ public class ProductLocationServiceImpl : ProductLocationService.ProductLocation
                 CurrentCapacity = location.CurrentCapacity,
                 IsMatriz = location.IsMatriz,
             };
-
+            var product = _productRepository.GetProductById(productLocation.ProductId);
             var productResponse = new ProductData
             {
                 Id = product.Id,
@@ -128,10 +139,9 @@ public class ProductLocationServiceImpl : ProductLocationService.ProductLocation
                 SalePrice = product.SalePrice,
             };
 
-
             return new ProductLocationGetResponse
             {
-                Id = product.Id,
+                Id = productLocation.Id,
                 Location = locationResponse,
                 Product = productResponse,
                 Quantity = productLocation.Amount
@@ -156,9 +166,7 @@ public class ProductLocationServiceImpl : ProductLocationService.ProductLocation
 
             foreach (var productLocation in productLocations)
             {
-                product = _productRepository.GetProductById(productLocation.ProductId);
                 location = _locationRepository.GetLocationById(productLocation.LocationId);
-
                 locationResponse = new LocationData
                 {
                     Id = location.Id,
@@ -167,7 +175,7 @@ public class ProductLocationServiceImpl : ProductLocationService.ProductLocation
                     CurrentCapacity = location.CurrentCapacity,
                     IsMatriz = location.IsMatriz,
                 };
-
+                product = _productRepository.GetProductById(productLocation.ProductId);
                 productResponse = new ProductData
                 {
                     Id = product.Id,
@@ -198,12 +206,17 @@ public class ProductLocationServiceImpl : ProductLocationService.ProductLocation
     {
         try
         {
-            var response = _productLocationRepository.DeleteProductLocation(request.Id);
+            var productLocation = _productLocationRepository.GetProductLocationById(request.Id);
+            var location = _locationRepository.GetLocationById(productLocation.LocationId);
+            location.CurrentCapacity += productLocation.Amount;
+
+            var locationResponse = _locationRepository.UpdateLocation(location);
+            var productLocationResponse = _productLocationRepository.DeleteProductLocation(request.Id);
 
             var message = "Erro ao deletar associação de produto a localização.";
             var success = false;
 
-            if (response is OkResult)
+            if (productLocationResponse is OkResult && locationResponse is OkResult)
             {
                 success = true;
                 message = "Associação de produto a localização deletada com sucesso.";
@@ -212,7 +225,7 @@ public class ProductLocationServiceImpl : ProductLocationService.ProductLocation
             return new ProductLocationResponse
             {
                 Message = message,
-                Success = true
+                Success = success
             };
         }
         catch (Exception ex)
@@ -223,6 +236,56 @@ public class ProductLocationServiceImpl : ProductLocationService.ProductLocation
 
     public override async Task<ProductLocationResponse> MoveProductLocation(ProductLocationMoveRequest request, ServerCallContext context)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var fromProductLocation = _productLocationRepository.GetProductLocationById(request.FromProductLocationId);
+            var fromLocation = _locationRepository.GetLocationById(fromProductLocation.LocationId);
+
+            var toProductLocation = _productLocationRepository.GetProductLocationById(request.ToProductLocationId);
+            var toLocation = _locationRepository.GetLocationById(toProductLocation.LocationId);
+
+            if (fromProductLocation.Amount < request.Quantity)
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, "Quantidade a ser movida é maior que a quantidade disponível."));
+            }
+            if (toLocation.CurrentCapacity < request.Quantity)
+            {
+                throw new RpcException(new Status(StatusCode.InvalidArgument, "Quantidade a ser movida é maior que a capacidade do local de destino."));
+            }
+
+            fromProductLocation.Amount -= request.Quantity;
+            fromLocation.CurrentCapacity += request.Quantity;
+
+            toProductLocation.Amount += request.Quantity;
+            toLocation.CurrentCapacity -= request.Quantity;
+
+            var fromProductLocationResponse = _productLocationRepository.UpdateProductLocation(fromProductLocation);
+            var fromLocationResponse = _locationRepository.UpdateLocation(fromLocation);
+
+            var toProductLocationResponse = _productLocationRepository.UpdateProductLocation(toProductLocation);
+            var toLocationResponse = _locationRepository.UpdateLocation(toLocation);
+
+            var message = "Erro ao mover produto de localização.";
+            var success = false;
+
+            if (fromProductLocationResponse is OkResult &&
+                fromLocationResponse is OkResult &&
+                toProductLocationResponse is OkResult &&
+                toLocationResponse is OkResult)
+            {
+                success = true;
+                message = "Produto movido de localização com sucesso.";
+            }
+
+            return new ProductLocationResponse
+            {
+                Message = message,
+                Success = success
+            };
+        }
+        catch (Exception ex)
+        {
+            throw new RpcException(new Status(StatusCode.Unknown, "Exception was thrown by handler."), ex.Message);
+        }
     }
 }

@@ -35,10 +35,9 @@ message ProductLocationDeleteRequest {
 }
 
 message ProductLocationMoveRequest {
-  int32 id = 1;
-  int32 fromLocationId = 2;
-  int32 toLocationId = 3;
-  int32 quantity = 4;
+  int32 fromProductLocationId = 1;
+  int32 toProductLocationId = 2;
+  int32 quantity = 3;
 }
 
 // Responses
@@ -50,12 +49,11 @@ message ProductLocationResponse {
 
 message ProductLocationGetResponse {
   int32 id = 1;
-  string name = 2;
-  int32 productId = 3;
-  ProductData product = 4;
-  int32 locationId = 5;
-  LocationData location = 6;
-  int32 quantity = 7;
+  int32 productId = 2;
+  ProductData product = 3;
+  int32 locationId = 4;
+  LocationData location = 5;
+  int32 quantity = 6;
 }
 
 message ProductLocationGetResponseList {

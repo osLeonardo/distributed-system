@@ -46,7 +46,7 @@ public class LocationServiceImpl : LocationService.LocationServiceBase
             return new LocationResponse
             {
                 Message = message,
-                Success = true
+                Success = success
             };
         }
         catch (Exception ex)
@@ -82,7 +82,7 @@ public class LocationServiceImpl : LocationService.LocationServiceBase
             return new LocationResponse
             {
                 Message = message,
-                Success = true
+                Success = success
             };
         }
         catch (Exception ex)
@@ -179,7 +179,7 @@ public class LocationServiceImpl : LocationService.LocationServiceBase
             return new LocationResponse
             {
                 Message = message,
-                Success = true
+                Success = success
             };
         }
         catch (Exception ex)

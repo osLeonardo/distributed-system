@@ -45,7 +45,7 @@ public class ProductServiceImpl : ProductService.ProductServiceBase
             return new ProductResponse
             {
                 Message = message,
-                Success = true
+                Success = success
             };
         }
         catch (Exception ex)
@@ -81,7 +81,7 @@ public class ProductServiceImpl : ProductService.ProductServiceBase
             return new ProductResponse
             {
                 Message = message,
-                Success = true
+                Success = success
             };
         }
         catch (Exception ex)
@@ -178,7 +178,7 @@ public class ProductServiceImpl : ProductService.ProductServiceBase
             return new ProductResponse
             {
                 Message = message,
-                Success = true
+                Success = success
             };
         }
         catch (Exception ex)
