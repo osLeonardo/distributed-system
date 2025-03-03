@@ -3,8 +3,8 @@
 This project is a User Client API built with ASP.NET Core and gRPC. It provides endpoints for managing users, locations, products, and product locations. The API uses session-based authentication to track logged-in users.
 
 ## Contributors
-- Jhonny Mezzari
 - Leonardo Spilere
+- Natanael Alves
 
 ## Features
 
